@@ -31,12 +31,12 @@ end
 func add_first{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, item_to_add : felt
 ) -> (arr_len : felt, arr : felt*):
-    return add_at(arr_len, arr, new_arr, item_to_add, 0, 0)
+    return add_at(arr_len, arr, 0, item_to_add)
 end
 
 @view
 func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, item_to_add : felt, index_to_add : felt
+    arr_len : felt, arr : felt*, index_to_add : felt, item_to_add : felt
 ) -> (arr_len : felt, arr : felt*):
     # TODO Ensure array bigger then  where you want to add
     let (new_arr_len, new_arr) = get_new_array()
@@ -47,8 +47,8 @@ func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     old_arr_len : felt,
     old_arr : felt*,
     new_arr : felt*,
-    item_to_add : felt,
     index_to_add : felt,
+    item_to_add : felt,
     current_index : felt,
 ) -> (arr_len : felt, arr : felt*):
     if old_arr_len == current_index:
@@ -57,13 +57,19 @@ func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     end
     if index_to_add == current_index:
         assert new_arr[current_index] = item_to_add
-        return add_at_recursive(arr_len + 1, arr, item_to_add, index_to_add, current_index + 1)
+        return add_at_recursive(
+            old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
+        )
     end
     let (addLater) = is_le(index_to_add, current_index)
     if addLater == 1:
         assert new_arr[current_index] = old_arr[current_index]
-        return add_at_recursive(arr_len, arr, item_to_add, index_to_add, current_index + 1)
+        return add_at_recursive(
+            old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
+        )
     end
-    assert arr[current_index] = item_to_add
-    return add_at_recursive(arr_len + 1, arr, item_to_add, index_to_add, current_index + 1)
+    assert new_arr[current_index] = item_to_add
+    return add_at_recursive(
+        old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
+    )
 end
