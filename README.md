@@ -25,6 +25,8 @@ Here is everything you can do:
 9. Reverse 
 10. Joining 2 arrays 
 
+/!\ signal some might throw an exception!
+
 ## TODO
 Flatten?  
 Support of structure in a generic way?

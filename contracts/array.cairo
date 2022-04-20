@@ -38,9 +38,15 @@ end
 func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, index_to_add : felt, item_to_add : felt
 ) -> (arr_len : felt, arr : felt*):
-    # TODO Ensure array bigger then  where you want to add
+    let (isValid) = is_le(index_to_add, arr_len)
+    with_attr attribute_name("Index out of range"):
+        assert isValid = 1
+    end
+    if arr_len == index_to_add:
+        return add_last(arr_len, arr, item_to_add)
+    end
     let (new_arr_len, new_arr) = get_new_array()
-    return add_at_recursive(arr_len, arr, new_arr, item_to_add, index_to_add, 0)
+    return add_at_recursive(arr_len, arr, new_arr, index_to_add, item_to_add, 0)
 end
 
 func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -52,24 +58,24 @@ func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     current_index : felt,
 ) -> (arr_len : felt, arr : felt*):
     if old_arr_len == current_index:
-        # TODO finish
-        return (old_arr_len + 1, new_arr)
+        return (old_arr_len, new_arr)
     end
+
     if index_to_add == current_index:
         assert new_arr[current_index] = item_to_add
         return add_at_recursive(
             old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
         )
     end
-    let (addLater) = is_le(index_to_add, current_index)
+    let (addLater) = is_le(current_index, index_to_add)
     if addLater == 1:
         assert new_arr[current_index] = old_arr[current_index]
         return add_at_recursive(
-            old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
+            old_arr_len, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
         )
     end
-    assert new_arr[current_index] = item_to_add
+    assert new_arr[current_index] = old_arr[current_index - 1]
     return add_at_recursive(
-        old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
+        old_arr_len, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
     )
 end
