@@ -23,8 +23,7 @@ end
 func add_last{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, item_to_add : felt
 ) -> (arr_len : felt, arr : felt*):
-    assert arr[arr_len] = item_to_add
-    return (arr_len + 1, arr)
+    return add_at(arr_len, arr, arr_len, item_to_add)
 end
 
 @view
@@ -39,11 +38,8 @@ func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, index_to_add : felt, item_to_add : felt
 ) -> (arr_len : felt, arr : felt*):
     let (isValid) = is_le(index_to_add, arr_len)
-    with_attr attribute_name("Index out of range"):
+    with_attr error_message("Index out of range"):
         assert isValid = 1
-    end
-    if arr_len == index_to_add:
-        return add_last(arr_len, arr, item_to_add)
     end
     let (new_arr_len, new_arr) = get_new_array()
     return add_at_recursive(arr_len, arr, new_arr, index_to_add, item_to_add, 0)
@@ -58,6 +54,12 @@ func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     current_index : felt,
 ) -> (arr_len : felt, arr : felt*):
     if old_arr_len == current_index:
+        # TODO could be enhanced somehow?
+        # We need this because it could be that the array is already limited in memory so
+        if index_to_add == current_index:
+            assert new_arr[current_index] = item_to_add
+            return (old_arr_len + 1, new_arr)
+        end
         return (old_arr_len, new_arr)
     end
 
