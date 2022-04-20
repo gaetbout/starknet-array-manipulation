@@ -1,0 +1,6 @@
+Makefile
+node.json
+accounts.json
+artifacts
+tests/__pycache__
+goerli.deployments.txt
