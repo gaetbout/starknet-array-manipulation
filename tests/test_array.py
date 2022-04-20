@@ -65,3 +65,11 @@ async def test_add_first_onArrayOfSizeThree():
     execution_info = await pytest.contract.add_first([2,3,4], 1).invoke()
     print (execution_info.result.arr)
     assert execution_info.result.arr == [1,2,3,4] 
+
+
+@pytest.mark.asyncio
+@pytest.mark.add_at
+async def test_add_at():
+    execution_info = await pytest.contract.add_first([2,3,4], 1).invoke()
+    print (execution_info.result.arr)
+    assert execution_info.result.arr == [1,2,3,4] 
