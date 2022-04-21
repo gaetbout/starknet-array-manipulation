@@ -4,7 +4,7 @@
 #
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.math_cmp import is_le
+from starkware.cairo.common.math_cmp import is_le, is_not_zero
 
 # creating new array
 
@@ -21,63 +21,122 @@ end
 
 @view
 func add_last{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, item_to_add : felt
+    arr_len : felt, arr : felt*, item : felt
 ) -> (arr_len : felt, arr : felt*):
-    return add_at(arr_len, arr, arr_len, item_to_add)
+    # We can't just assert at arr_len with the item (try it, a test should be failing :))
+    return add_at(arr_len, arr, arr_len, item)
 end
 
 @view
 func add_first{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, item_to_add : felt
+    arr_len : felt, arr : felt*, item : felt
 ) -> (arr_len : felt, arr : felt*):
-    return add_at(arr_len, arr, 0, item_to_add)
+    return add_at(arr_len, arr, 0, item)
 end
 
 @view
 func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, index_to_add : felt, item_to_add : felt
+    arr_len : felt, arr : felt*, index : felt, item : felt
 ) -> (arr_len : felt, arr : felt*):
-    let (isValid) = is_le(index_to_add, arr_len)
-    with_attr error_message("Index out of range"):
-        assert isValid = 1
-    end
+    assert_index_in_array_length(arr_len, index)
     let (new_arr_len, new_arr) = get_new_array()
-    return add_at_recursive(arr_len, arr, new_arr, index_to_add, item_to_add, 0)
+    return add_at_recursive(arr_len, arr, new_arr, index, item, 0)
 end
 
 func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     old_arr_len : felt,
     old_arr : felt*,
     new_arr : felt*,
-    index_to_add : felt,
-    item_to_add : felt,
+    index : felt,
+    item : felt,
     current_index : felt,
 ) -> (arr_len : felt, arr : felt*):
-    if old_arr_len == current_index:
-        # TODO could be enhanced somehow?
-        # We need this because it could be that the array is already limited in memory so
-        if index_to_add == current_index:
-            assert new_arr[current_index] = item_to_add
-            return (old_arr_len + 1, new_arr)
-        end
+    if index == current_index:
+        assert new_arr[current_index] = item
+        return add_at_recursive(old_arr_len + 1, old_arr, new_arr, index, item, current_index + 1)
+    end
+
+    let (isOutOfArray) = is_le(old_arr_len, current_index)
+    if isOutOfArray == 1:
         return (old_arr_len, new_arr)
     end
 
-    if index_to_add == current_index:
-        assert new_arr[current_index] = item_to_add
-        return add_at_recursive(
-            old_arr_len + 1, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
-        )
+    if index == current_index:
+        assert new_arr[current_index] = item
+        return add_at_recursive(old_arr_len + 1, old_arr, new_arr, index, item, current_index + 1)
     end
-    let (addLater) = is_le(current_index, index_to_add)
+    let (addLater) = is_le(current_index, index)
     if addLater == 1:
         assert new_arr[current_index] = old_arr[current_index]
-        return add_at_recursive(
-            old_arr_len, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
-        )
+        return add_at_recursive(old_arr_len, old_arr, new_arr, index, item, current_index + 1)
     end
     assert new_arr[current_index] = old_arr[current_index - 1]
-    return add_at_recursive(
-        old_arr_len, old_arr, new_arr, index_to_add, item_to_add, current_index + 1
-    )
+    return add_at_recursive(old_arr_len, old_arr, new_arr, index, item, current_index + 1)
+end
+
+# Removing
+
+@view
+func remove_last{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (arr_len : felt, arr : felt*):
+    assert_check_array_not_empty(arr_len)
+    return remove_at(arr_len, arr, arr_len - 1)
+end
+
+@view
+func remove_first{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (arr_len : felt, arr : felt*):
+    assert_check_array_not_empty(arr_len)
+    return remove_at(arr_len, arr, 0)
+end
+
+@view
+func remove_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, index : felt
+) -> (arr_len : felt, arr : felt*):
+    assert_check_array_not_empty(arr_len)
+    assert_index_in_array_length(arr_len, index + 1)
+    let (new_arr_len, new_arr) = get_new_array()
+    return remove_at_recursive(arr_len, arr, new_arr, index, 0)
+end
+
+func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr_len : felt, old_arr : felt*, new_arr : felt*, index : felt, current_index : felt
+) -> (arr_len : felt, arr : felt*):
+    if index == current_index:
+        return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
+    end
+    if old_arr_len == current_index:
+        return (old_arr_len - 1, new_arr)
+    end
+    let (addLater) = is_le(current_index, index)
+    if addLater == 1:
+        assert new_arr[current_index] = old_arr[current_index]
+        return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
+    end
+    assert new_arr[current_index - 1] = old_arr[current_index]
+    return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
+end
+# checking
+
+func assert_index_in_array_length{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(arr_len : felt, index : felt):
+    let (res) = is_le(index, arr_len)
+    with_attr error_message("Index out of range"):
+        assert res = 1
+    end
+    return ()
+end
+
+func assert_check_array_not_empty{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(arr_len : felt):
+    let (res) = is_not_zero(arr_len)
+    with_attr error_message("Array empty - nothing to remove"):
+        assert res = 1
+    end
+    return ()
 end

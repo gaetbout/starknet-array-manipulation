@@ -1,7 +1,7 @@
 #  Array manipulation
 
 Here is a simple manipulation to do some common array manipulation.  
-Since cairo is memory immutable (once you write the value if a memory cell, this cell cannot  change anymore), each method changing the order, adding an item at a specific index, will result in a new array.   
+Since cairo is memory immutable (once you write the value if a memory cell, this cell cannot  change anymore), each method changing the order, adding an item at a specific index, will result in a new array. So you can see each method as a copy method with some more extra logic.
 Which is why I chose to standardise  this behavior by  always returning two elements the length of the new  array and the new array (arr_len, arr) even when it is not useful.  
 Here is everything you can do:  
 1. Creating an empty array
@@ -14,6 +14,8 @@ Here is everything you can do:
     * Remove first
     * Remove at a specific index
     * All occurences of
+    * First occurence of
+    * Last occurence of 
 4. Splice
 5. Finding
     * index of
