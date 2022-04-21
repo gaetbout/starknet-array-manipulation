@@ -17,10 +17,12 @@ Here is everything you can do:
     * remove_at(arr_len : felt, arr : felt*, index : felt) -> (arr_len : felt, arr : felt*): Remove at a specific index
 4. Searching: All are O(N) complexity
     * contains(arr_len : felt, arr : felt*, item : felt) -> (contains : felt): Contains item
-    * index_of(arr_len : felt, arr : felt*, item : felt) -> (index : felt): Index of item
-    * min(arr_len : felt, arr : felt*) -> (min : felt): Returns the min value of the array
-    * max(arr_len : felt, arr : felt*) -> (max : felt): Returns the max value of the array
-    * Counting occurrences of 
+    * index_of(arr_len : felt, arr : felt*, item : felt) -> (index : felt): Index of the item or -1 if not (felt equivalent ==> 3618502788666131213697322783095070105623107215331596699973092056135872020480)
+    * min(arr_len : felt, arr : felt*) -> (min : felt): Returns the min value of the array  
+    Can throw an error
+    * max(arr_len : felt, arr : felt*) -> (max : felt): Returns the max value of the array  
+    Can throw an error
+    * occurrences_of(arr_len : felt, arr : felt*, item : felt) -> (occurrences : felt): Counting occurrences of item
 5. Sorting
 6. Replace 
 7. Reverse 
@@ -29,6 +31,7 @@ Here is everything you can do:
 /!\ signal some might throw an exception!
 
 ## TODO
+/!\ /!\ /!\SPLIT INTO DIFFERENT FILES
  - Removing 
     * All occurences of
     * First occurence of
@@ -40,5 +43,6 @@ Here is everything you can do:
  - Support of structure in a generic way?
  - Copy from to 
 
-Make an interface?
+Make an interface?  
+Make a better look   
 Don't hesitate to request me any feature that could be missing

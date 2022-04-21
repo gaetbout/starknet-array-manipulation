@@ -98,8 +98,8 @@ func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     current_index : felt,
     offset : felt,
 ) -> (arr_len : felt, arr : felt*):
-    if old_arr_len - offset == current_index:
-        return (old_arr_len - offset, new_arr)
+    if old_arr_len - 1 == current_index:
+        return (old_arr_len - 1, new_arr)
     end
     if index == current_index:
         assert new_arr[current_index] = old_arr[current_index + 1]
@@ -183,6 +183,28 @@ func max_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
         return max_recursive(arr_len, arr, arr[current_index], current_index + 1)
     end
     return max_recursive(arr_len, arr, current_max, current_index + 1)
+end
+
+@view
+func occurrences_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt
+) -> (occurrences : felt):
+    return occurrences_of_recursive(arr_len, arr, item, 0, 0)
+end
+
+@view
+func occurrences_of_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt, current_occurrences : felt, current_index : felt
+) -> (occurrences : felt):
+    if arr_len == current_index:
+        return (current_occurrences)
+    end
+    if arr[current_index] == item:
+        return occurrences_of_recursive(
+            arr_len, arr, item, current_occurrences + 1, current_index + 1
+        )
+    end
+    return occurrences_of_recursive(arr_len, arr, item, current_occurrences, current_index + 1)
 end
 
 # Checking

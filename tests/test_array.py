@@ -286,4 +286,29 @@ async def test_max_emptyArray(contract):
     assert "Empty array" in execution_info.value.args[1]["message"]
 
 
+@pytest.mark.asyncio
+@pytest.mark.occurrences_of
+async def test_occurrences_of(contract):
+    execution_info = await contract.occurrences_of([4,2,3,2,5], 2).invoke()
+    assert execution_info.result.occurrences == 2
+
+@pytest.mark.asyncio
+@pytest.mark.occurrences_of
+async def test_occurrences_of_beginAndEnd(contract):
+    execution_info = await contract.occurrences_of([2,4,3,5,2], 2).invoke()
+    assert execution_info.result.occurrences == 2
+
+@pytest.mark.asyncio
+@pytest.mark.occurrences_of
+async def test_occurrences_of_notThere(contract):
+    execution_info = await contract.occurrences_of([4,2,3,2,5], 42).invoke()
+    assert execution_info.result.occurrences == 0
+
+
+@pytest.mark.asyncio
+@pytest.mark.occurrences_of
+async def test_occurrences_of_fullOf3(contract):
+    execution_info = await contract.occurrences_of([3,3,3,3], 3).invoke()
+    assert execution_info.result.occurrences == 4
+
 
