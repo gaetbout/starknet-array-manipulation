@@ -13,25 +13,30 @@ Here is everything you can do:
     * Remove last 
     * Remove first
     * Remove at a specific index
-    * All occurences of
-    * First occurence of
-    * Last occurence of 
-4. Splice
-5. Finding
+4. Searching
+    * contains
     * index of
     * min
     * max
-6. Counting occurences of 
-7. Sorting
-8. Replace 
-9. Reverse 
-10. Joining 2 arrays 
+    * Counting occurrences of 
+5. Sorting
+6. Replace 
+7. Reverse 
+8. Joining 2 arrays 
 
 /!\ signal some might throw an exception!
 
 ## TODO
-Flatten?  
-Support of structure in a generic way?
+ - Removing 
+    * All occurences of
+    * First occurence of
+    * Last occurence of 
+ - Searching
+    * Index of min
+    * index of max
+ - Flatten?  
+ - Support of structure in a generic way?
+ - Copy from to 
 
 
 Don't hesitate to request me any feature that could be missing

@@ -1,12 +1,9 @@
 %lang starknet
-#
-# Imports
-#
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.math_cmp import is_le, is_not_zero
 
-# creating new array
+# Creation
 
 @view
 func get_new_array{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
@@ -101,8 +98,8 @@ func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     current_index : felt,
     offset : felt,
 ) -> (arr_len : felt, arr : felt*):
-    if old_arr_len - 1 == current_index:
-        return (old_arr_len - 1, new_arr)
+    if old_arr_len - offset == current_index:
+        return (old_arr_len - offset, new_arr)
     end
     if index == current_index:
         assert new_arr[current_index] = old_arr[current_index + 1]
@@ -113,7 +110,82 @@ func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     assert new_arr[current_index] = old_arr[current_index + offset]
     return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1, offset)
 end
-# checking
+
+# Searching
+@view
+func contains{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt
+) -> (contains : felt):
+    let (index) = index_of(arr_len, arr, item)
+    if index == -1:
+        return (0)
+    end
+    return (1)
+end
+
+@view
+func index_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt
+) -> (index : felt):
+    return index_of_recursive(arr_len, arr, item, 0)
+end
+
+func index_of_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt, current_index : felt
+) -> (index : felt):
+    if arr_len == current_index:
+        # Returning -1 because it is very very unlikely that we have an array that big
+        return (-1)
+    end
+    if arr[current_index] == item:
+        return (current_index)
+    end
+    return index_of_recursive(arr_len, arr, item, current_index + 1)
+end
+
+@view
+func min{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (min : felt):
+    assert_check_array_not_empty(arr_len)
+    return min_recursive(arr_len, arr, arr[0], 1)
+end
+
+func min_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, current_min : felt, current_index : felt
+) -> (min : felt):
+    if arr_len == current_index:
+        return (current_min)
+    end
+    let (isLe) = is_le(arr[current_index], current_min)
+    if isLe == 1:
+        return min_recursive(arr_len, arr, arr[current_index], current_index + 1)
+    end
+    return min_recursive(arr_len, arr, current_min, current_index + 1)
+end
+
+@view
+func max{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (max : felt):
+    assert_check_array_not_empty(arr_len)
+    return max_recursive(arr_len, arr, arr[0], 1)
+end
+
+func max_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, current_max : felt, current_index : felt
+) -> (max : felt):
+    if arr_len == current_index:
+        return (current_max)
+    end
+    let (isLe) = is_le(current_max, arr[current_index])
+    if isLe == 1:
+        return max_recursive(arr_len, arr, arr[current_index], current_index + 1)
+    end
+    return max_recursive(arr_len, arr, current_max, current_index + 1)
+end
+
+# Checking
 
 func assert_index_in_array_length{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -129,7 +201,7 @@ func assert_check_array_not_empty{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(arr_len : felt):
     let (res) = is_not_zero(arr_len)
-    with_attr error_message("Array empty - nothing to remove"):
+    with_attr error_message("Empty array"):
         assert res = 1
     end
     return ()
