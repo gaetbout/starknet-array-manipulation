@@ -40,7 +40,7 @@ func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
 ) -> (arr_len : felt, arr : felt*):
     assert_index_in_array_length(arr_len, index)
     let (new_arr_len, new_arr) = get_new_array()
-    return add_at_recursive(arr_len, arr, new_arr, index, item, 0)
+    return add_at_recursive(arr_len, arr, new_arr, index, item, 0, 0)
 end
 
 func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -50,28 +50,19 @@ func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_ch
     index : felt,
     item : felt,
     current_index : felt,
+    offset : felt,
 ) -> (arr_len : felt, arr : felt*):
+    if old_arr_len + 1 == current_index:
+        return (old_arr_len + 1, new_arr)
+    end
     if index == current_index:
         assert new_arr[current_index] = item
-        return add_at_recursive(old_arr_len + 1, old_arr, new_arr, index, item, current_index + 1)
+        return add_at_recursive(
+            old_arr_len, old_arr, new_arr, index, item, current_index + 1, offset + 1
+        )
     end
-
-    let (isOutOfArray) = is_le(old_arr_len, current_index)
-    if isOutOfArray == 1:
-        return (old_arr_len, new_arr)
-    end
-
-    if index == current_index:
-        assert new_arr[current_index] = item
-        return add_at_recursive(old_arr_len + 1, old_arr, new_arr, index, item, current_index + 1)
-    end
-    let (addLater) = is_le(current_index, index)
-    if addLater == 1:
-        assert new_arr[current_index] = old_arr[current_index]
-        return add_at_recursive(old_arr_len, old_arr, new_arr, index, item, current_index + 1)
-    end
-    assert new_arr[current_index] = old_arr[current_index - 1]
-    return add_at_recursive(old_arr_len, old_arr, new_arr, index, item, current_index + 1)
+    assert new_arr[current_index] = old_arr[current_index - offset]
+    return add_at_recursive(old_arr_len, old_arr, new_arr, index, item, current_index + 1, offset)
 end
 
 # Removing
@@ -99,25 +90,28 @@ func remove_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     assert_check_array_not_empty(arr_len)
     assert_index_in_array_length(arr_len, index + 1)
     let (new_arr_len, new_arr) = get_new_array()
-    return remove_at_recursive(arr_len, arr, new_arr, index, 0)
+    return remove_at_recursive(arr_len, arr, new_arr, index, 0, 0)
 end
 
 func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    old_arr_len : felt, old_arr : felt*, new_arr : felt*, index : felt, current_index : felt
+    old_arr_len : felt,
+    old_arr : felt*,
+    new_arr : felt*,
+    index : felt,
+    current_index : felt,
+    offset : felt,
 ) -> (arr_len : felt, arr : felt*):
-    if index == current_index:
-        return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
-    end
-    if old_arr_len == current_index:
+    if old_arr_len - 1 == current_index:
         return (old_arr_len - 1, new_arr)
     end
-    let (addLater) = is_le(current_index, index)
-    if addLater == 1:
-        assert new_arr[current_index] = old_arr[current_index]
-        return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
+    if index == current_index:
+        assert new_arr[current_index] = old_arr[current_index + 1]
+        return remove_at_recursive(
+            old_arr_len, old_arr, new_arr, index, current_index + 1, offset + 1
+        )
     end
-    assert new_arr[current_index - 1] = old_arr[current_index]
-    return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1)
+    assert new_arr[current_index] = old_arr[current_index + offset]
+    return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1, offset)
 end
 # checking
 
