@@ -31,6 +31,7 @@ Here is everything you can do:
 /!\ signal some might throw an exception!
 
 ## TODO
+USE OF MEMCPY!!!
 /!\ /!\ /!\SPLIT INTO DIFFERENT FILES
  - Removing 
     * All occurences of
