@@ -165,8 +165,8 @@ async def test_remove_at_outside(contract):
         await contract.remove_at([1], 2).invoke()
     assert "Index out of range" in execution_info.value.args[1]["message"]
 
-# reverse
 
+# reverse
 
 @pytest.mark.asyncio
 @pytest.mark.reverse
@@ -191,3 +191,29 @@ async def test_reverse_emptyArray(contract):
 async def test_reverse_long(contract):
     execution_info = await contract.reverse([0,1,2,3,4,5,6,7,8,9,10]).invoke()
     assert execution_info.result.arr == [10,9,8,7,6,5,4,3,2,1,0]
+
+# Sorting 
+
+@pytest.mark.asyncio
+@pytest.mark.sort
+async def test_sort(contract):
+    execution_info = await contract.sort([1,2,3]).invoke()
+    assert execution_info.result.arr == [3,2,1]
+
+@pytest.mark.asyncio
+@pytest.mark.sort
+async def test_sort_alreadySorted(contract):
+    execution_info = await contract.sort([3,2,1]).invoke()
+    assert execution_info.result.arr == [3,2,1]
+
+@pytest.mark.asyncio
+@pytest.mark.sort
+async def test_sort_withMultipleMaxs(contract):
+    execution_info = await contract.sort([5,4,3,2,1,2,3,4,5]).invoke()
+    assert execution_info.result.arr == [5,5,4,4,3,3,2,2,1]
+
+@pytest.mark.asyncio
+@pytest.mark.sort
+async def test_sort_emptyArray(contract):
+    execution_info = await contract.sort([]).invoke()
+    assert execution_info.result.arr == []

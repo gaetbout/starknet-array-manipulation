@@ -2,6 +2,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
 from contracts.utils import assert_index_in_array_length, assert_check_array_not_empty
+from contracts.array_searching import index_of_max
 
 # Creation
 
@@ -120,7 +121,6 @@ func reverse{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     return reverse_recursive(arr_len, arr, 0, new_arr, 0)
 end
 
-@view
 func reverse_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     old_arr_len : felt, old_arr : felt*, new_arr_len : felt, new_arr : felt*, current_index : felt
 ) -> (arr_len : felt, arr : felt*):
@@ -129,4 +129,30 @@ func reverse_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     end
     assert new_arr[current_index] = old_arr[old_arr_len - current_index - 1]
     return reverse_recursive(old_arr_len, old_arr, new_arr_len + 1, new_arr, current_index + 1)
+end
+
+# Sorting
+
+@view
+func sort{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (arr_len : felt, arr : felt*):
+    let (arr_sorted_len, arr_sorted) = get_new_array()
+    return sort_recursive(arr_len, arr, 0, arr_sorted)
+end
+
+func sort_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr_len : felt, old_arr : felt*, arr_sorted_len : felt, arr_sorted : felt*
+) -> (arr_sorted_len : felt, arr_sorted : felt*):
+    alloc_locals
+    # Array to be sorted is empty
+    if old_arr_len == 0:
+        return (arr_sorted_len, arr_sorted)
+    end
+    let (indexOfMax) = index_of_max(old_arr_len, old_arr)
+    # Pushing the max occurence to the last available spot
+    assert arr_sorted[arr_sorted_len] = old_arr[indexOfMax]
+    # getting a new old array
+    let (old_arr_shortened_len, old_arr_shortened) = remove_at(old_arr_len, old_arr, indexOfMax)
+    return sort_recursive(old_arr_shortened_len, old_arr_shortened, arr_sorted_len + 1, arr_sorted)
 end
