@@ -95,14 +95,6 @@ async def test_add_at_outside(contract):
 
 @pytest.mark.asyncio
 @pytest.mark.remove_last
-async def test_remove_last_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_last([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
-
-
-@pytest.mark.asyncio
-@pytest.mark.remove_last
 async def test_remove_last_arrayOfSizeOne(contract):
     execution_info = await contract.remove_last([1]).invoke()
     assert execution_info.result.arr == [] 
@@ -114,13 +106,13 @@ async def test_remove_last_arrayOfSizeThree(contract):
     execution_info = await contract.remove_last([1,2,3]).invoke()
     assert execution_info.result.arr == [1,2] 
 
-
 @pytest.mark.asyncio
-@pytest.mark.remove_first
-async def test_remove_first_emptyArray(contract):
+@pytest.mark.remove_last
+async def test_remove_last_emptyArray(contract):
     with pytest.raises(Exception) as execution_info:
-        await contract.remove_first([]).invoke()
+        await contract.remove_last([]).invoke()
     assert "Empty array" in execution_info.value.args[1]["message"]
+
 
 @pytest.mark.asyncio
 @pytest.mark.remove_first
@@ -134,6 +126,12 @@ async def test_remove_first_arrayOfSizeThree(contract):
     execution_info = await contract.remove_first([1,1,2,3]).invoke()
     assert execution_info.result.arr == [1,2,3]
 
+@pytest.mark.asyncio
+@pytest.mark.remove_first
+async def test_remove_first_emptyArray(contract):
+    with pytest.raises(Exception) as execution_info:
+        await contract.remove_first([]).invoke()
+    assert "Empty array" in execution_info.value.args[1]["message"]
 
 @pytest.mark.asyncio
 @pytest.mark.remove_at
@@ -167,3 +165,29 @@ async def test_remove_at_outside(contract):
         await contract.remove_at([1], 2).invoke()
     assert "Index out of range" in execution_info.value.args[1]["message"]
 
+# reverse
+
+
+@pytest.mark.asyncio
+@pytest.mark.reverse
+async def test_reverse(contract):
+    execution_info = await contract.reverse([1,2,3]).invoke()
+    assert execution_info.result.arr == [3,2,1]
+
+@pytest.mark.asyncio
+@pytest.mark.reverse
+async def test_reverse_array_size_1(contract):
+    execution_info = await contract.reverse([1]).invoke()
+    assert execution_info.result.arr == [1]
+
+@pytest.mark.asyncio
+@pytest.mark.reverse
+async def test_reverse_emptyArray(contract):
+    execution_info = await contract.reverse([]).invoke()
+    assert execution_info.result.arr == []
+
+@pytest.mark.asyncio
+@pytest.mark.reverse
+async def test_reverse_long(contract):
+    execution_info = await contract.reverse([0,1,2,3,4,5,6,7,8,9,10]).invoke()
+    assert execution_info.result.arr == [10,9,8,7,6,5,4,3,2,1,0]

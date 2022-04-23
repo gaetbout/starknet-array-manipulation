@@ -25,13 +25,13 @@ Here is everything you can do:
     * occurrences_of(arr_len : felt, arr : felt*, item : felt) -> (occurrences : felt): Counting occurrences of item
 5. Sorting
 6. Replace 
-7. Reverse 
+7. reverse(arr_len : felt, arr : felt*) -> (arr_len : felt, arr : felt*): Reverse an array
 8. Joining 2 arrays 
 
 /!\ signal some might throw an exception!
 
 ## TODO
-USE OF MEMCPY!!!
+USE OF MEMCPY!!!  
 /!\ /!\ /!\SPLIT INTO DIFFERENT FILES
  - Removing 
     * All occurences of

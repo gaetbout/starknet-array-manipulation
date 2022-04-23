@@ -110,3 +110,23 @@ func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range
     assert new_arr[current_index] = old_arr[current_index + offset]
     return remove_at_recursive(old_arr_len, old_arr, new_arr, index, current_index + 1, offset)
 end
+
+# Reverse
+@view
+func reverse{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (arr_len : felt, arr : felt*):
+    let (new_arr_len, new_arr) = get_new_array()
+    return reverse_recursive(arr_len, arr, 0, new_arr, 0)
+end
+
+@view
+func reverse_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr_len : felt, old_arr : felt*, new_arr_len : felt, new_arr : felt*, current_index : felt
+) -> (arr_len : felt, arr : felt*):
+    if old_arr_len == current_index:
+        return (new_arr_len, new_arr)
+    end
+    assert new_arr[current_index] = old_arr[old_arr_len - current_index - 1]
+    return reverse_recursive(old_arr_len, old_arr, new_arr_len + 1, new_arr, current_index + 1)
+end
