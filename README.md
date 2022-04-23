@@ -26,6 +26,8 @@ Here is everything you can do:
     Can throw an error when array empty
     * index_of_max(arr_len : felt, arr : felt*) -> (index : felt): Returns the index of the max value of the array  
     Can throw an error when array empty
+    * index_of_min(arr_len : felt, arr : felt*) -> (index : felt): Returns the index of the min value of the array  
+    Can throw an error when array empty
     * occurrences_of(arr_len : felt, arr : felt*, item : felt) -> (occurrences : felt): Counting occurrences of item
 5. sort(arr_len : felt, arr : felt*) -> (arr_len : felt, arr : felt*): Sorting  
 O(N log(n))  
@@ -43,8 +45,6 @@ From max to min
     * All occurences of
     * First occurence of
     * Last occurence of 
- - Searching
-    * Index of min
  - Flatten?  
  - Support of structure in a generic way?
  - Copy from to 

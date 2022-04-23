@@ -39,21 +39,31 @@ end
 func min{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*
 ) -> (min : felt):
-    assert_check_array_not_empty(arr_len)
-    return min_recursive(arr_len, arr, arr[0], 1)
+    let (indexOfMin) = index_of_min(arr_len, arr)
+    return (arr[indexOfMin])
 end
 
-func min_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, current_min : felt, current_index : felt
-) -> (min : felt):
+@view
+func index_of_min{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*
+) -> (index : felt):
+    assert_check_array_not_empty(arr_len)
+    return index_of_min_recursive(arr_len, arr, arr[0], 0, 1)
+end
+
+func index_of_min_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, current_min : felt, current_min_index : felt, current_index : felt
+) -> (index : felt):
     if arr_len == current_index:
-        return (current_min)
+        return (current_min_index)
     end
     let (isLe) = is_le(arr[current_index], current_min)
     if isLe == 1:
-        return min_recursive(arr_len, arr, arr[current_index], current_index + 1)
+        return index_of_min_recursive(
+            arr_len, arr, arr[current_index], current_index, current_index + 1
+        )
     end
-    return min_recursive(arr_len, arr, current_min, current_index + 1)
+    return index_of_min_recursive(arr_len, arr, current_min, current_min_index, current_index + 1)
 end
 
 @view

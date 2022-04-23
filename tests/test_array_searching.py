@@ -93,6 +93,38 @@ async def test_min_emptyArray(contract):
 
 
 @pytest.mark.asyncio
+@pytest.mark.index_of_min
+async def test_index_of_min(contract):
+    execution_info = await contract.index_of_min([2,1,2,3,4,3,2]).invoke()
+    assert execution_info.result.index == 1
+
+@pytest.mark.asyncio
+@pytest.mark.index_of_min
+async def test_index_of_min_first(contract):
+    execution_info = await contract.index_of_min([1,2,3,4]).invoke()
+    assert execution_info.result.index == 0
+
+@pytest.mark.asyncio
+@pytest.mark.index_of_min
+async def test_index_of_min_last(contract):
+    execution_info = await contract.index_of_min([4,3,2,1]).invoke()
+    assert execution_info.result.index == 3
+
+@pytest.mark.asyncio
+@pytest.mark.index_of_min
+async def test_index_of_min_duplicates(contract):
+    execution_info = await contract.index_of_min([1,4,3,2,1]).invoke()
+    assert execution_info.result.index == 4
+
+@pytest.mark.asyncio
+@pytest.mark.index_of_min
+async def test_index_of_min_emptyArray(contract):
+    with pytest.raises(Exception) as execution_info:
+        await contract.index_of_min([]).invoke()
+    assert "Empty array" in execution_info.value.args[1]["message"]
+
+
+@pytest.mark.asyncio
 @pytest.mark.max
 async def test_max(contract):
     execution_info = await contract.max([1,2,3,4,3,2,1]).invoke()
@@ -122,7 +154,6 @@ async def test_max_emptyArray(contract):
     with pytest.raises(Exception) as execution_info:
         await contract.max([]).invoke()
     assert "Empty array" in execution_info.value.args[1]["message"]
-
 
 
 @pytest.mark.asyncio
