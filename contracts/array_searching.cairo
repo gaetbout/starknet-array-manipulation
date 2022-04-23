@@ -60,22 +60,8 @@ end
 func max{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*
 ) -> (max : felt):
-    assert_check_array_not_empty(arr_len)
-    # TODO Can just call index of max instead
-    return max_recursive(arr_len, arr, arr[0], 1)
-end
-
-func max_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    arr_len : felt, arr : felt*, current_max : felt, current_index : felt
-) -> (max : felt):
-    if arr_len == current_index:
-        return (current_max)
-    end
-    let (isLe) = is_le(current_max, arr[current_index])
-    if isLe == 1:
-        return max_recursive(arr_len, arr, arr[current_index], current_index + 1)
-    end
-    return max_recursive(arr_len, arr, current_max, current_index + 1)
+    let (indexOfMax) = index_of_max(arr_len, arr)
+    return (arr[indexOfMax])
 end
 
 @view
