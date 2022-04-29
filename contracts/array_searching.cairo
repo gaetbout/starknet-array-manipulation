@@ -2,6 +2,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_le
 from contracts.utils import assert_check_array_not_empty
+from contracts.structures import Array
 
 # Searching
 @view
@@ -118,3 +119,5 @@ func occurrences_of_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     end
     return occurrences_of_recursive(arr_len, arr, item, current_occurrences, current_index + 1)
 end
+
+# TODO equals?
