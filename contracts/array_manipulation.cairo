@@ -108,7 +108,7 @@ func reverse_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     old_arr : Array, new_arr : Array, current_index : felt
 ) -> (arr_len : felt, arr : felt*):
     if old_arr.length == current_index:
-        return (new_arr.length, new_arr.values)
+        return (old_arr.length, new_arr.values)
     end
     assert new_arr.values[current_index] = old_arr.values[old_arr.length - current_index - 1]
     return reverse_recursive(old_arr, new_arr, current_index + 1)
@@ -130,7 +130,7 @@ func sort_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     alloc_locals
     # Array to be sorted is empty
     if old_arr.length == 0:
-        return (old_arr.length, arr_sorted.values)
+        return (arr_sorted.length, arr_sorted.values)
     end
     let (indexOfMax) = index_of_max(old_arr.length, old_arr.values)
     # Pushing the max occurence to the last available spot

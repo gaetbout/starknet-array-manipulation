@@ -88,7 +88,7 @@ async def test_remove_first_emptyArray(contract):
     ([1,2,3,4], 2, [1,2,4]),
     ([1,2,3,4], 3, [1,2,3]),
 ])
-async def test_remove_at_1(contract, input, index, result):
+async def test_remove_at(contract, input, index, result):
     execution_info = await contract.remove_at(input, index).invoke()
     assert execution_info.result.arr == result
     
