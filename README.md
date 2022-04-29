@@ -1,12 +1,14 @@
-#  Array manipulation
+#  Array
 
-Here is a simple manipulation to do some common array manipulation.  
-Since cairo is memory immutable (once you write the value if a memory cell, this cell cannot  change anymore), each method changing the order, adding an item at a specific index, will result in a new array. So you can see each method as a copy method with some more extra logic.
+Here is a simple lib to do some common array operations.  
+Since cairo is memory immutable (once you write the value in a memory cell, this cell cannot  change anymore), each function requiring any memory change, will create a new array. So you can see each method as a copy method with some more extra logic.
 Which is why I chose to standardise  this behavior by  always returning two elements the length of the new  array and the new array (arr_len, arr) even when it is not useful.  
 Here is everything you can do:  
 
-1. Creation
-    * get_new_array() -> (arr_len : felt, arr : felt*): Creating an new empty array  
+This library is divided in two files (so far).  
+One is for actual array manipulation that will then create a new array as a response. While the other should just return a response but not affect the state of memory. 
+
+## Array manipulation
 2. Adding: All are O(N) complexity
     * add_last(arr_len : felt, arr : felt*, item : felt) -> (arr_len : felt, arr : felt*): Adding at the last position  
      ⚠️ If you still have access to the array, and the memory isn't bounded already, please just do:  
@@ -17,6 +19,8 @@ Here is everything you can do:
     * remove_last(arr_len : felt, arr : felt*) -> (arr_len : felt, arr : felt*): Remove last 
     * remove_first(arr_len : felt, arr : felt*) -> (arr_len : felt, arr : felt*): Remove first
     * remove_at(arr_len : felt, arr : felt*, index : felt) -> (arr_len : felt, arr : felt*): Remove at a specific index
+
+## Array searching
 4. Searching: All are O(N) complexity
     * contains(arr_len : felt, arr : felt*, item : felt) -> (contains : felt): Contains item
     * index_of(arr_len : felt, arr : felt*, item : felt) -> (index : felt): Index of the item or -1 if not (felt equivalent ==> 3618502788666131213697322783095070105623107215331596699973092056135872020480)

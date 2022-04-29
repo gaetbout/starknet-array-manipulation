@@ -2,7 +2,6 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_le
 from contracts.utils import assert_check_array_not_empty
-from contracts.structures import Array
 
 # Searching
 @view
@@ -105,7 +104,6 @@ func occurrences_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     return occurrences_of_recursive(arr_len, arr, item, 0, 0)
 end
 
-@view
 func occurrences_of_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, item : felt, current_occurrences : felt, current_index : felt
 ) -> (occurrences : felt):
