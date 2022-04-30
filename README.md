@@ -20,15 +20,11 @@ All these methods are returning the same values
 | add_last | (arr_len : felt, arr : felt*, item : felt) |
 | add_first | (arr_len : felt, arr : felt*, item : felt)  |
 | add_at | (arr_len : felt, arr : felt*, index : felt, item : felt) |
-|  |  |
 | remove_last | (arr_len : felt, arr : felt*) |
 | remove_first | (arr_len : felt, arr : felt*) |
 | remove_at | (arr_len : felt, arr : felt*, index : felt) |
-|  |  |
 | sort | (arr_len : felt, arr : felt*) |
-|  |  |
 | reverse | (arr_len : felt, arr : felt*) |
-|  |  |
 
 ⚠️ Some remark(s):   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
@@ -51,7 +47,6 @@ Unless specified, these methods are all in O(N) complexity.
 | max | (arr_len : felt, arr : felt*) | (max : felt) |
 | index_of_max | (arr_len : felt, arr : felt*) | (index : felt) |
 | occurrences_of | (arr_len : felt, arr : felt*, item : felt) | (occurrences : felt) |
-|  |  |  |
 
 ⚠️ Some remark(s):   
 > index_of if  not found will return 3618502788666131213697322783095070105623107215331596699973092056135872020480 which is -1 in felt
