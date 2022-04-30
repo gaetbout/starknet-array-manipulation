@@ -1,6 +1,7 @@
 %lang starknet
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
+from starkware.cairo.common.memcpy import memcpy
 from contracts.utils import assert_index_in_array_length, assert_check_array_not_empty
 from contracts.array_searching import index_of_max
 from contracts.structures import Array
@@ -19,8 +20,12 @@ end
 func add_last{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, item : felt
 ) -> (arr_len : felt, arr : felt*):
-    # We can't just assert at arr_len with the item (try it, a test should be failing :))
-    return add_at(arr_len, arr, arr_len, item)
+    alloc_locals
+    # We can't just assert at arr_len with the item
+    let (new_arr) = get_new_array()
+    memcpy(new_arr.values, arr, arr_len)
+    assert new_arr.values[arr_len] = item
+    return (arr_len + 1, new_arr.values)
 end
 
 @view
@@ -34,23 +39,22 @@ end
 func add_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, index : felt, item : felt
 ) -> (arr_len : felt, arr : felt*):
+    alloc_locals
     assert_index_in_array_length(arr_len, index)
     let (new_arr) = get_new_array()
-    return add_at_recursive(Array(arr_len, arr), new_arr, index, item, 0, 0)
+    memcpy(new_arr.values, arr, index)
+    assert new_arr.values[index] = item
+    return add_after_recursive(Array(arr_len, arr), new_arr, index + 1)
 end
 
-func add_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    old_arr : Array, new_arr : Array, index : felt, item : felt, current_index : felt, offset : felt
+func add_after_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr : Array, new_arr : Array, current_index : felt
 ) -> (arr_len : felt, arr : felt*):
     if old_arr.length + 1 == current_index:
         return (old_arr.length + 1, new_arr.values)
     end
-    if index == current_index:
-        assert new_arr.values[current_index] = item
-        return add_at_recursive(old_arr, new_arr, index, item, current_index + 1, offset + 1)
-    end
-    assert new_arr.values[current_index] = old_arr.values[current_index - offset]
-    return add_at_recursive(old_arr, new_arr, index, item, current_index + 1, offset)
+    assert new_arr.values[current_index] = old_arr.values[current_index - 1]
+    return add_after_recursive(old_arr, new_arr, current_index + 1)
 end
 
 # Removing
@@ -59,8 +63,11 @@ end
 func remove_last{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*
 ) -> (arr_len : felt, arr : felt*):
+    alloc_locals
     assert_check_array_not_empty(arr_len)
-    return remove_at(arr_len, arr, arr_len - 1)
+    let (new_arr) = get_new_array()
+    memcpy(new_arr.values, arr, arr_len - 1)
+    return (arr_len - 1, new_arr.values)
 end
 
 @view
@@ -75,24 +82,22 @@ end
 func remove_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*, index : felt
 ) -> (arr_len : felt, arr : felt*):
+    alloc_locals
     assert_check_array_not_empty(arr_len)
     assert_index_in_array_length(arr_len, index + 1)
     let (new_arr) = get_new_array()
-    return remove_at_recursive(Array(arr_len, arr), new_arr, index, 0, 0)
+    memcpy(new_arr.values, arr, index)
+    return add_before_recursive(Array(arr_len, arr), new_arr, index)
 end
 
-func remove_at_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    old_arr : Array, new_arr : Array, index : felt, current_index : felt, offset : felt
+func add_before_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr : Array, new_arr : Array, current_index : felt
 ) -> (arr_len : felt, arr : felt*):
     if old_arr.length - 1 == current_index:
         return (old_arr.length - 1, new_arr.values)
     end
-    if index == current_index:
-        assert new_arr.values[current_index] = old_arr.values[current_index + 1]
-        return remove_at_recursive(old_arr, new_arr, index, current_index + 1, offset + 1)
-    end
-    assert new_arr.values[current_index] = old_arr.values[current_index + offset]
-    return remove_at_recursive(old_arr, new_arr, index, current_index + 1, offset)
+    assert new_arr.values[current_index] = old_arr.values[current_index + 1]
+    return add_before_recursive(old_arr, new_arr, current_index + 1)
 end
 
 # Reverse
