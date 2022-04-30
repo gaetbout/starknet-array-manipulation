@@ -117,5 +117,3 @@ func occurrences_of_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     end
     return occurrences_of_recursive(arr_len, arr, item, current_occurrences, current_index + 1)
 end
-
-# TODO equals?

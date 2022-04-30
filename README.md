@@ -29,9 +29,13 @@ All these methods are returning the same values
 ⚠️ Some remark(s):   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
  `arr[arr_len] = item`  
- it'll avoid the creation of a new array
+ it'll avoid the creation of a new array  
 
-> The sort method has a complexity of O(N(log(n)))
+> The sort method has a complexity of O(N(log(n)))  
+
+
+> remove_first, remove_last, remove_at will throw an error if the array is empty
+> add_at, remove_at will throw an error if the index is out of range
 
 ## Array searching
 This consists of a bunch of function that of for puprose to go through the array and return what is asked.  
@@ -52,6 +56,15 @@ Unless specified, these methods are all in O(N) complexity.
 > index_of if  not found will return 3618502788666131213697322783095070105623107215331596699973092056135872020480 which is -1 in felt
 
 > min, index_of_min, max, index_of_max will throw an error if the array is empty
+
+## Tests
+
+To run the test suite, copy this repository and put yourself at the root.  
+Compile the contracts using `make build` or `nile compile`.  
+then run the tests `make test` or, for more details `pytest -v`.   
+On my machine they all run in approximately 23s:  
+
+![Test results](./images/tests.png)
 
 ## TODO
 

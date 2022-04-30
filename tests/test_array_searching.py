@@ -97,7 +97,6 @@ async def test_index_of_max(contract, input, result):
     assert execution_info.result.index == result
 
 @pytest.mark.asyncio
-@pytest.mark.index_of_max
 async def test_index_of_max_emptyArray(contract):
     with pytest.raises(Exception) as execution_info:
         await contract.index_of_max([]).invoke()
