@@ -1,3 +1,5 @@
+![Tests](https://github.com/gaetbout/starknet-array-manipulation/actions/workflows/python-app.yml/badge.svg)
+
 #  Array
 
 Here is a simple lib to do some common array operations.  
