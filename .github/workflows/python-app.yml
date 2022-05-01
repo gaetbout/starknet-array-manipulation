@@ -29,6 +29,7 @@ jobs:
         source ~/cairo_venv/bin/activate
     - name: Install packages
       run: |
+        pip3 install wheel
         pip3 install ecdsa fastecdsa sympy
         apt install -y libgmp3-dev
         pip3 install cairo-lang
