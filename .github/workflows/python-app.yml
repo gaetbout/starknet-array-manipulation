@@ -31,7 +31,7 @@ jobs:
       run: |
         pip3 install wheel
         pip3 install ecdsa fastecdsa sympy
-        apt install -y libgmp3-dev
+        sudo apt install -y libgmp3-dev
         pip3 install cairo-lang
         pip3 install contextvars
     - name: Test with pytest
