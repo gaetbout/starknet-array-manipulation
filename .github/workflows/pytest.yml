@@ -1,5 +1,0 @@
-name: Run-pytest-tests
-
-on: push
-
-jobs:
