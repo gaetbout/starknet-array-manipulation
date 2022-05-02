@@ -19,14 +19,15 @@ All these methods are returning the same values
 
 | Function | Arguments |
 | ------ | ----------- |
-| add_last | (arr_len : felt, arr : felt*, item : felt) |
 | add_first | (arr_len : felt, arr : felt*, item : felt)  |
+| add_last | (arr_len : felt, arr : felt*, item : felt) |
 | add_at | (arr_len : felt, arr : felt*, index : felt, item : felt) |
-| remove_last | (arr_len : felt, arr : felt*) |
 | remove_first | (arr_len : felt, arr : felt*) |
+| remove_last | (arr_len : felt, arr : felt*) |
 | remove_at | (arr_len : felt, arr : felt*, index : felt) |
 | sort | (arr_len : felt, arr : felt*) |
 | reverse | (arr_len : felt, arr : felt*) |
+| join | (arr1_len : felt, arr1 : felt*, arr2_len : felt, arr2 : felt*) |
 
 ⚠️ Some remark(s):   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
