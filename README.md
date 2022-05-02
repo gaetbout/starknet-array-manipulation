@@ -5,10 +5,11 @@
 Here is a simple lib to do some common array operations.  
 Since cairo is memory immutable (once you write the value in a memory cell, this cell cannot  change anymore), each function requiring any memory change, will create a new array. So you can see each method as a copy method with some more extra logic.
 Which is why I chose to standardise  this behavior by  always returning two elements the length of the new  array and the new array (arr_len, arr) even when it is not useful.  
-Here is everything you can do:  
 
 This library is divided in two files (so far).   
-To know how to use each function, don't hesitate to refer to the tests.
+To know how to use each function, don't hesitate to refer to the tests.  
+
+Here is everything you can do:  
 
 ## Array manipulation
 
