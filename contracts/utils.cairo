@@ -13,6 +13,16 @@ func assert_index_in_array_length{
     return ()
 end
 
+func assert_from_smaller_then_to{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    from_index : felt, to_index : felt
+):
+    let (res) = is_le(from_index + 1, to_index)
+    with_attr error_message("From should be strictly smaller then to"):
+        assert res = 1
+    end
+    return ()
+end
+
 func assert_check_array_not_empty{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(arr_len : felt):

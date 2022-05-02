@@ -7,8 +7,8 @@ Since cairo is memory immutable (once you write the value in a memory cell, this
 Which is why I chose to standardise  this behavior by  always returning two elements the length of the new  array and the new array (arr_len, arr) even when it is not useful.  
 Here is everything you can do:  
 
-This library is divided in two files (so far).  
-Whenever the support for passing and returning structure is there, it  should be updated.
+This library is divided in two files (so far).
+To know how to use each function, don't hesitate to refer to the tests.
 
 ## Array manipulation
 
@@ -28,6 +28,7 @@ All these methods are returning the same values
 | sort | (arr_len : felt, arr : felt*) |
 | reverse | (arr_len : felt, arr : felt*) |
 | join | (arr1_len : felt, arr1 : felt*, arr2_len : felt, arr2 : felt*) |
+| copy_from_to | (arr_len : felt, arr : felt*, from_index : felt, to_index : felt)  |
 
 ⚠️ Some remark(s):   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
@@ -36,9 +37,11 @@ All these methods are returning the same values
 
 > The sort method has a complexity of O(N(log(n)))  
 
+> remove_first, remove_last, remove_at will fail if the array is empty  
 
-> remove_first, remove_last, remove_at will throw an error if the array is empty
-> add_at, remove_at will throw an error if the index is out of range
+> add_at, remove_at will fail if the index is out of range  
+
+> copy_from_to can fail for 3 different reasons. The From index or To index being  out of range and To index being smaller or equal to From index
 
 ## Array searching
 This consists of a bunch of function that of for puprose to go through the array and return what is asked.  
@@ -58,16 +61,15 @@ Unless specified, these methods are all in O(N) complexity.
 ⚠️ Some remark(s):   
 > index_of if  not found will return 3618502788666131213697322783095070105623107215331596699973092056135872020480 which is -1 in felt
 
-> min, index_of_min, max, index_of_max will throw an error if the array is empty
+> min, index_of_min, max, index_of_max will fail if the array is empty
 
 ## Tests
 
 To run the test suite, copy this repository and put yourself at the root.  
 Compile the contracts using `make build` or `nile compile`.  
 then run the tests `make test` or, for more details `pytest -v`.   
-On my machine they all run in approximately 23s:  
+For more  details check the Actions tab.
 
-![Test results](./images/tests.png)
 
 ## TODO
 
@@ -77,8 +79,6 @@ On my machine they all run in approximately 23s:
     * Last occurence of 
  - Flatten?  
  - Support of structure in a generic way?
- - Copy from to 
  - Replace 
- - Joining 2 arrays 
 
 Don't hesitate to request me any feature that could be missing or ping me when there is the support for structure
