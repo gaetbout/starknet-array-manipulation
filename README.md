@@ -15,7 +15,7 @@ Here is everything you can do:
 This file will always have to create a new array to be returned.  
 Unless specified, these methods are all in O(N) complexity.  
 All these methods are returning the same values  
-`**(arr_len : felt, arr : felt*):**`  
+`(arr_len : felt, arr : felt*):`  
 
 | Function | Arguments |
 | ------ | ----------- |
