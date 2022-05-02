@@ -3,20 +3,19 @@
 #  Array
 
 Here is a simple lib to do some common array operations.  
-Since cairo is memory immutable (once you write the value in a memory cell, this cell cannot  change anymore), each function requiring any memory change, will create a new array. So you can see each method as a copy method with some more extra logic.
-Which is why I chose to standardise  this behavior by  always returning two elements the length of the new  array and the new array (arr_len, arr) even when it is not useful.  
+Since cairo is memory immutable (once you write the value in a memory cell, this cell cannot  change anymore), each function requiring any memory change, will create a new array. So you can see each method as a copy method with some more extra logic.  
 
-This library is divided in two files (so far).   
+This library is divided in two parts.  
 To know how to use each function, don't hesitate to refer to the tests.  
 
 Here is everything you can do:  
 
 ## Array manipulation
 
-This file will always have to create a new array to return.  
+This file will always have to create a new array to be returned.  
 Unless specified, these methods are all in O(N) complexity.  
-All these methods are returning the same values 
-**(arr_len : felt, arr : felt*):**  
+All these methods are returning the same values  
+`**(arr_len : felt, arr : felt*):**`  
 
 | Function | Arguments |
 | ------ | ----------- |
@@ -31,7 +30,7 @@ All these methods are returning the same values
 | join | (arr1_len : felt, arr1 : felt*, arr2_len : felt, arr2 : felt*) |
 | copy_from_to | (arr_len : felt, arr : felt*, from_index : felt, to_index : felt)  |
 
-⚠️ Some remark(s):   
+⚠️ Some remarks:   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
  `arr[arr_len] = item`  
  it'll avoid the creation of a new array  
@@ -45,7 +44,7 @@ All these methods are returning the same values
 > copy_from_to can fail for 3 different reasons. The From index or To index being  out of range and To index being smaller or equal to From index
 
 ## Array searching
-This consists of a bunch of function that of for puprose to go through the array and return what is asked.  
+These are all the functions that will iterate through the array and return what is asked.  
 Unless specified, these methods are all in O(N) complexity.  
 
 
@@ -59,7 +58,7 @@ Unless specified, these methods are all in O(N) complexity.
 | index_of_max | (arr_len : felt, arr : felt*) | (index : felt) |
 | occurrences_of | (arr_len : felt, arr : felt*, item : felt) | (occurrences : felt) |
 
-⚠️ Some remark(s):   
+⚠️ Some remarks:   
 > index_of if  not found will return 3618502788666131213697322783095070105623107215331596699973092056135872020480 which is -1 in felt
 
 > min, index_of_min, max, index_of_max will fail if the array is empty
