@@ -1,6 +1,7 @@
 %lang starknet
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.math_cmp import is_le
+from starkware.cairo.common.bool import TRUE
 from contracts.utils import assert_check_array_not_empty
 
 # Searching
@@ -58,7 +59,7 @@ func index_of_min_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
         return (current_min_index)
     end
     let (isLe) = is_le(arr[current_index], current_min)
-    if isLe == 1:
+    if isLe == TRUE:
         return index_of_min_recursive(
             arr_len, arr, arr[current_index], current_index, current_index + 1
         )
@@ -89,7 +90,7 @@ func index_of_max_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ra
         return (current_max_index)
     end
     let (isLe) = is_le(current_max, arr[current_index])
-    if isLe == 1:
+    if isLe == TRUE:
         return index_of_max_recursive(
             arr_len, arr, arr[current_index], current_index, current_index + 1
         )
