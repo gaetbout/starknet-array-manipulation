@@ -163,3 +163,36 @@ func copy_from_to{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     memcpy(new_arr, arr + from_index, to_index - from_index)
     return (to_index - from_index, new_arr)
 end
+
+# Replace
+
+@view
+func replace{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, old_item : felt, new_item : felt
+) -> (arr_len : felt, arr : felt*):
+    alloc_locals
+    let (new_arr_len, new_arr) = get_new_array()
+    return replace_recursive(arr_len, arr, new_arr_len, new_arr, old_item, new_item, 0)
+end
+
+func replace_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    old_arr_len : felt,
+    old_arr : felt*,
+    new_arr_len : felt,
+    new_arr : felt*,
+    old_item : felt,
+    new_item : felt,
+    current_index : felt,
+) -> (sorted_arr_len : felt, sorted_arr : felt*):
+    if old_arr_len == current_index:
+        return (new_arr_len, new_arr)
+    end
+    if old_arr[current_index] == old_item:
+        assert new_arr[current_index] = new_item
+    else:
+        assert new_arr[current_index] = old_arr[current_index]
+    end
+    return replace_recursive(
+        old_arr_len, old_arr, new_arr_len + 1, new_arr, old_item, new_item, current_index + 1
+    )
+end

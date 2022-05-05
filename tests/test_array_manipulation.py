@@ -181,3 +181,20 @@ async def test_join_to_equal_to_from(contract):
     with pytest.raises(Exception) as execution_info:
         await contract.copy_from_to([1,2,3,4,5],3, 3).invoke()
     assert "From should be strictly smaller then to" in execution_info.value.args[1]["message"]
+
+
+
+# Replace
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("input, old_item, new_item, result",[
+    ([],1,2, []),
+    ([1,2,3],1,2, [2,2,3]),
+    ([1,2,3],3,2, [1,2,2]),
+    ([2,2,2],1,2, [2,2,2]),
+    ([2,2,2],2,1, [1,1,1]),
+    ([1,2,3,4,5,4,3,2,1],2,1, [1,1,3,4,5,4,3,1,1]),
+])
+async def test_replace(contract, input, old_item, new_item, result):
+    execution_info = await contract.replace(input, old_item, new_item).invoke()
+    assert execution_info.result.arr == result
