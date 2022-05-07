@@ -28,7 +28,8 @@ All these methods are returning the same values
 | sort | (arr_len : felt, arr : felt*) |
 | reverse | (arr_len : felt, arr : felt*) |
 | join | (arr1_len : felt, arr1 : felt*, arr2_len : felt, arr2 : felt*) |
-| copy_from_to | (arr_len : felt, arr : felt*, from_index : felt, to_index : felt)  |
+| copy_from_to | (arr_len : felt, arr : felt*, from_index : felt, to_index : felt) |
+| replace | (arr_len : felt, arr : felt*, old_item : felt, new_item : felt) |
 
 ⚠️ Some remarks:   
 > For add_last, if you still have access to the array, and the memory isn't bounded already, please just do:  
@@ -79,6 +80,5 @@ For more  details check the Actions tab of this GitHub repository.
     * Last occurence of 
  - Flatten?  
  - Support of structure in a generic way?
- - Replace 
 
 Don't hesitate to request me any feature that could be missing or ping me when there is the support for structure
