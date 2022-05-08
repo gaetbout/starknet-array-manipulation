@@ -18,7 +18,7 @@ All these methods are returning the same values
 `(arr_len : felt, arr : felt*):`  
 
 | Function | Arguments |
-| ------ | ----------- |
+| ------ | ----------- | 
 | add_first | (arr_len : felt, arr : felt*, item : felt)  |
 | add_last | (arr_len : felt, arr : felt*, item : felt) |
 | add_at | (arr_len : felt, arr : felt*, index : felt, item : felt) |
