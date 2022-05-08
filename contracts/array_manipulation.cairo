@@ -92,6 +92,41 @@ func remove_at{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
     return (arr_len - 1, new_arr)
 end
 
+@view
+func remove_all_occurences_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    arr_len : felt, arr : felt*, item : felt
+) -> (arr_len : felt, arr : felt*):
+    alloc_locals
+    assert_check_array_not_empty(arr_len)
+    let (new_arr_len, new_arr) = get_new_array()
+    return remove_all_occurences_of_recursive(arr_len, arr, new_arr_len, new_arr, item, 0, 0)
+end
+
+func remove_all_occurences_of_recursive{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(
+    old_arr_len : felt,
+    old_arr : felt*,
+    new_arr_len : felt,
+    new_arr : felt*,
+    item : felt,
+    offset : felt,
+    current_index : felt,
+) -> (arr_len : felt, arr : felt*):
+    if old_arr_len == current_index:
+        return (new_arr_len, new_arr)
+    end
+    if old_arr[current_index] == item:
+        return remove_all_occurences_of_recursive(
+            old_arr_len, old_arr, new_arr_len, new_arr, item, offset + 1, current_index + 1
+        )
+    end
+    assert new_arr[current_index - offset] = old_arr[current_index]
+    return remove_all_occurences_of_recursive(
+        old_arr_len, old_arr, new_arr_len + 1, new_arr, item, offset, current_index + 1
+    )
+end
+
 # Reverse
 
 @view
