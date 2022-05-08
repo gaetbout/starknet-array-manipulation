@@ -53,7 +53,6 @@ For more  details check the Actions tab of this GitHub repository.
 # TODO
 
  - Removing 
-    * All occurences of
     * First occurence of
     * Last occurence of 
  - Flatten?  
