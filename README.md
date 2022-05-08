@@ -19,6 +19,8 @@ All these functions are returning the same values
 | [remove_first](#remove_first) | (arr_len : felt, arr : felt*) |
 | [remove_last](#remove_last) | (arr_len : felt, arr : felt*) |
 | [remove_at](#remove_at) | (arr_len : felt, arr : felt*, index : felt) |
+| [remove_first_occurence_of](#remove_first_occurence_of) | (arr_len : felt, arr : felt*, item : felt) |
+| [remove_last_occurence_of](#remove_last_occurence_of) | (arr_len : felt, arr : felt*, item : felt) |
 | [remove_all_occurences_of](#remove_all_occurences_of) | (arr_len : felt, arr : felt*, item : felt) |
 | [sort](#sort) | (arr_len : felt, arr : felt*) |
 | [reverse](#reverse) | (arr_len : felt, arr : felt*) |
@@ -51,14 +53,10 @@ For more  details check the Actions tab of this GitHub repository.
 
 
 # TODO
-
- - Removing 
-    * First occurence of
-    * Last occurence of 
  - Flatten?  
  - Support of structure in a generic way?
 
-**Don't hesitate to request me any feature that could be missing or ping me when there is the support for structure**
+**Don't hesitate to request me any feature that could be missing or ping me whenever there is the support for returning structure (with felt\*)**
 
 # Detailed description 
 
@@ -181,11 +179,11 @@ Will fail if the array is empty or if the index is out of range.
 
 **Complexity:**  
 O(N)  
-<a id="remove_all_occurences_of"></a>
+<a id="remove_first_occurence_of"></a>
 ___
-remove_all_occurences_of(arr_len : felt, arr : felt*, item : felt) -> (arr_len : felt, arr : felt*)  
+remove_first_occurence_of(arr_len : felt, arr : felt*, item : felt) -> (arr_len : felt, arr : felt*)  
 ___
-Creates a new array without all occurences of the *item*.  
+Creates a new array without the first occurence of *item*.  
 
 **Parameters:**  
 arr_len - the length of the array   
@@ -198,6 +196,46 @@ arr - the new array
 
 **Remark:**  
 Will fail if the array is empty or if the index is out of range.  
+
+**Complexity:**  
+O(N)  
+<a id="remove_last_occurence_of"></a>
+___
+remove_last_occurence_of(arr_len : felt, arr : felt*, item : felt) -> (arr_len : felt, arr : felt*)  
+___
+Creates a new array without the last occurence of *item*.  
+
+**Parameters:**  
+arr_len - the length of the array   
+arr - the array that needs to be modified  
+item - the item that needs to be removed  
+
+**Returns:**  
+arr_len - the length of the new array  
+arr - the new array  
+
+**Remark:**  
+Will fail if the array is empty.  
+
+**Complexity:**  
+O(N)  
+<a id="remove_all_occurences_of"></a>
+___
+remove_all_occurences_of(arr_len : felt, arr : felt*, item : felt) -> (arr_len : felt, arr : felt*)  
+___
+Creates a new array without all occurences of *item*.  
+
+**Parameters:**  
+arr_len - the length of the array   
+arr - the array that needs to be modified  
+item - the item that needs to be removed  
+
+**Returns:**  
+arr_len - the length of the new array  
+arr - the new array  
+
+**Remark:**  
+Will fail if the array is empty.  
 
 **Complexity:**  
 O(N)  

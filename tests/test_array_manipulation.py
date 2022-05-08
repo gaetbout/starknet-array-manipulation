@@ -106,6 +106,54 @@ async def test_remove_at_outside(contract):
         await contract.remove_at([1], 2).invoke()
     assert "Index out of range" in execution_info.value.args[1]["message"]
 
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("input, index, result",[
+    ([1,2,3,4], 1, [2,3,4]),
+    ([1,2,3,4], 2, [1,3,4]),
+    ([1,2,3,4], 4, [1,2,3]),
+    ([1,1,1,1], 1, [1,1,1]),
+    ([1,1,1,1], 2, [1,1,1,1]),
+    ([1,2,3,4,3,2,1], 2, [1,3,4,3,2,1]),
+    ([1,2,3,4,3,2,1], 1, [2,3,4,3,2,1]),
+    
+])
+async def test_remove_first_occurence_of(contract, input, index, result):
+    execution_info = await contract.remove_first_occurence_of(input, index).invoke()
+    assert execution_info.result.arr == result
+
+
+@pytest.mark.asyncio
+async def test_remove_first_occurence_of_emptyArray(contract):
+    with pytest.raises(Exception) as execution_info:
+        await contract.remove_first_occurence_of([], 1).invoke()
+    assert "Empty array" in execution_info.value.args[1]["message"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("input, index, result",[
+    ([1,2,3,4], 1, [2,3,4]),
+    ([1,2,3,4], 2, [1,3,4]),
+    ([1,2,3,4], 4, [1,2,3]),
+    ([1,1,1,1], 1, [1,1,1]),
+    ([1,1,1,1], 2, [1,1,1,1]),
+    ([1,2,3,4,3,2,1], 2, [1,2,3,4,3,1]),
+    ([1,2,3,4,3,2,1], 1, [1,2,3,4,3,2]),
+    
+])
+async def test_remove_last_occurence_of(contract, input, index, result):
+    execution_info = await contract.remove_last_occurence_of(input, index).invoke()
+    assert execution_info.result.arr == result
+
+
+@pytest.mark.asyncio
+async def test_remove_last_occurence_of_emptyArray(contract):
+    with pytest.raises(Exception) as execution_info:
+        await contract.remove_last_occurence_of([], 1).invoke()
+    assert "Empty array" in execution_info.value.args[1]["message"]
+
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, index, result",[
     ([1,2,3,4], 1, [2,3,4]),
