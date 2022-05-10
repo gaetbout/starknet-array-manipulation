@@ -25,7 +25,7 @@ func add_first{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 ) -> (arr_len : felt, arr : felt*):
     alloc_locals
     let (new_arr_len, new_arr) = get_new_array()
-    assert new_arr[0] = item
+    assert [new_arr] = item
     memcpy(new_arr + 1, arr, arr_len)
     return (arr_len + 1, new_arr)
 end
@@ -125,12 +125,11 @@ end
 func remove_last_occurence_of_recursive{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
 }(arr_len : felt, arr : felt*, item : felt, current_index : felt) -> (arr_len : felt, arr : felt*):
-    # Since we shouldn't have an array that is 3618502788666131213697322783095070105623107215331596699973092056135872020480 long it should be fine to assess that
-    if current_index == -1:
-        return (arr_len, arr)
-    end
     if arr[current_index] == item:
         return remove_at(arr_len, arr, current_index)
+    end
+    if current_index == 0:
+        return (arr_len, arr)
     end
     return remove_last_occurence_of_recursive(arr_len, arr, item, current_index - 1)
 end
@@ -142,31 +141,25 @@ func remove_all_occurences_of{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, 
     alloc_locals
     assert_check_array_not_empty(arr_len)
     let (new_arr_len, new_arr) = get_new_array()
-    return remove_all_occurences_of_recursive(arr_len, arr, new_arr_len, new_arr, item, 0, 0)
+    return remove_all_occurences_of_recursive(arr_len, arr, new_arr_len, new_arr, item)
 end
 
 func remove_all_occurences_of_recursive{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(
-    old_arr_len : felt,
-    old_arr : felt*,
-    new_arr_len : felt,
-    new_arr : felt*,
-    item : felt,
-    offset : felt,
-    current_index : felt,
-) -> (arr_len : felt, arr : felt*):
-    if old_arr_len == current_index:
+}(old_arr_len : felt, old_arr : felt*, new_arr_len : felt, new_arr : felt*, item : felt) -> (
+    arr_len : felt, arr : felt*
+):
+    if old_arr_len == 0:
         return (new_arr_len, new_arr)
     end
-    if old_arr[current_index] == item:
+    if [old_arr] == item:
         return remove_all_occurences_of_recursive(
-            old_arr_len, old_arr, new_arr_len, new_arr, item, offset + 1, current_index + 1
+            old_arr_len - 1, &old_arr[1], new_arr_len, new_arr, item
         )
     end
-    assert new_arr[current_index - offset] = old_arr[current_index]
+    assert new_arr[new_arr_len] = [old_arr]
     return remove_all_occurences_of_recursive(
-        old_arr_len, old_arr, new_arr_len + 1, new_arr, item, offset, current_index + 1
+        old_arr_len - 1, &old_arr[1], new_arr_len + 1, new_arr, item
     )
 end
 
@@ -177,17 +170,17 @@ func reverse{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     arr_len : felt, arr : felt*
 ) -> (arr_len : felt, arr : felt*):
     let (new_arr_len, new_arr) = get_new_array()
-    return reverse_recursive(arr_len, arr, new_arr_len, new_arr, 0)
+    return reverse_recursive(arr_len, arr, new_arr_len, new_arr)
 end
 
 func reverse_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    old_arr_len : felt, old_arr : felt*, new_arr_len : felt, new_arr : felt*, current_index : felt
+    old_arr_len : felt, old_arr : felt*, new_arr_len : felt, new_arr : felt*
 ) -> (arr_len : felt, arr : felt*):
-    if old_arr_len == current_index:
+    if old_arr_len == 0:
         return (new_arr_len, new_arr)
     end
-    assert new_arr[current_index] = old_arr[old_arr_len - current_index - 1]
-    return reverse_recursive(old_arr_len, old_arr, new_arr_len + 1, new_arr, current_index + 1)
+    assert new_arr[old_arr_len - 1] = [old_arr]
+    return reverse_recursive(old_arr_len - 1, &old_arr[1], new_arr_len + 1, new_arr)
 end
 
 # Sorting
@@ -250,7 +243,7 @@ func replace{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
 ) -> (arr_len : felt, arr : felt*):
     alloc_locals
     let (new_arr_len, new_arr) = get_new_array()
-    return replace_recursive(arr_len, arr, new_arr_len, new_arr, old_item, new_item, 0)
+    return replace_recursive(arr_len, arr, new_arr_len, new_arr, old_item, new_item)
 end
 
 func replace_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
@@ -260,17 +253,17 @@ func replace_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     new_arr : felt*,
     old_item : felt,
     new_item : felt,
-    current_index : felt,
 ) -> (sorted_arr_len : felt, sorted_arr : felt*):
-    if old_arr_len == current_index:
+    if old_arr_len == 0:
         return (new_arr_len, new_arr)
     end
-    if old_arr[current_index] == old_item:
-        assert new_arr[current_index] = new_item
+    let current_item = [old_arr]
+    if current_item == old_item:
+        assert new_arr[new_arr_len] = new_item
     else:
-        assert new_arr[current_index] = old_arr[current_index]
+        assert new_arr[new_arr_len] = current_item
     end
     return replace_recursive(
-        old_arr_len, old_arr, new_arr_len + 1, new_arr, old_item, new_item, current_index + 1
+        old_arr_len - 1, &old_arr[1], new_arr_len + 1, new_arr, old_item, new_item
     )
 end
