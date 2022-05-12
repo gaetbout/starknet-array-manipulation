@@ -2,6 +2,7 @@ import os
 
 import pytest
 from starkware.starknet.testing.starknet import Starknet
+from utils import assert_revert
 
 MAX_VALUE = 3618502788666131213697322783095070105623107215331596699973092056135872020480
 CONTRACT_FILE = os.path.join("contracts", "array_searching.cairo")
@@ -45,9 +46,7 @@ async def test_min(contract, input, result):
 
 @pytest.mark.asyncio
 async def test_min_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.min([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.min([]).invoke(), "Empty array")
 
 
 @pytest.mark.asyncio
@@ -63,9 +62,7 @@ async def test_index_of_min(contract,input, result):
 
 @pytest.mark.asyncio
 async def test_index_of_min_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.index_of_min([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.index_of_min([]).invoke(), "Empty array")
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, result",[
@@ -80,9 +77,7 @@ async def test_max(contract, input, result):
 
 @pytest.mark.asyncio
 async def test_max_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.max([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.max([]).invoke(), "Empty array")
 
 
 @pytest.mark.asyncio
@@ -98,9 +93,7 @@ async def test_index_of_max(contract, input, result):
 
 @pytest.mark.asyncio
 async def test_index_of_max_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.index_of_max([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.index_of_max([]).invoke(), "Empty array")
 
 
 @pytest.mark.asyncio

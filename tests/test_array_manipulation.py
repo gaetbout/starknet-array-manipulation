@@ -2,6 +2,7 @@ import os
 
 import pytest
 from starkware.starknet.testing.starknet import Starknet
+from utils import assert_revert
 
 CONTRACT_FILE = os.path.join("contracts", "array_manipulation.cairo")
 
@@ -44,11 +45,10 @@ async def test_add_at(contract, input, index, item, result):
     execution_info = await contract.add_at(input, index, item).invoke()
     assert execution_info.result.arr == result
 
+
 @pytest.mark.asyncio
 async def test_add_at_outside(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.add_at([1,2,3,4], 10,10).invoke()
-    assert "Index out of range" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.add_at([1,2,3,4], 10,10).invoke(), "Index out of range")
 
 
 # Removing 
@@ -64,9 +64,7 @@ async def test_remove_first(contract, input, result):
 
 @pytest.mark.asyncio
 async def test_remove_first_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_first([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.remove_first([]).invoke(), "Empty array")
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, result",[
@@ -79,9 +77,7 @@ async def test_remove_last(contract, input, result):
 
 @pytest.mark.asyncio
 async def test_remove_last_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_last([]).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.remove_last([]).invoke(), "Empty array" )
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, index, result",[
@@ -96,16 +92,11 @@ async def test_remove_at(contract, input, index, result):
     
 @pytest.mark.asyncio
 async def test_remove_at_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_at([], 1).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.remove_at([], 1).invoke(), "Empty array" )
 
 @pytest.mark.asyncio
 async def test_remove_at_outside(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_at([1], 2).invoke()
-    assert "Index out of range" in execution_info.value.args[1]["message"]
-
+    await assert_revert(contract.remove_at([1], 2).invoke(), "Index out of range")
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, index, result",[
@@ -125,9 +116,7 @@ async def test_remove_first_occurence_of(contract, input, index, result):
 
 @pytest.mark.asyncio
 async def test_remove_first_occurence_of_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_first_occurence_of([], 1).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.remove_first_occurence_of([], 1).invoke(), "Empty array" )
 
 
 @pytest.mark.asyncio
@@ -148,9 +137,7 @@ async def test_remove_last_occurence_of(contract, input, index, result):
 
 @pytest.mark.asyncio
 async def test_remove_last_occurence_of_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_last_occurence_of([], 1).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.remove_last_occurence_of([], 1).invoke(), "Empty array")
 
 
 
@@ -172,10 +159,7 @@ async def test_remove_all_occurences_of(contract, input, index, result):
 
 @pytest.mark.asyncio
 async def test_remove_all_occurences_of_emptyArray(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.remove_all_occurences_of([], 1).invoke()
-    assert "Empty array" in execution_info.value.args[1]["message"]
-
+    await assert_revert(contract.remove_all_occurences_of([], 1).invoke(), "Empty array")
 # reverse
 
 @pytest.mark.asyncio
@@ -229,27 +213,19 @@ async def test_copy_from_to(contract, input,  from_index, to_index, result):
 
 @pytest.mark.asyncio
 async def test_join_from_outside(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.copy_from_to([1],1, 2).invoke()
-    assert "Index out of range" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.copy_from_to([1],1, 2).invoke(), "Index out of range")
 
 @pytest.mark.asyncio
 async def test_join_to_outside(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.copy_from_to([1],0, 2).invoke()
-    assert "Index out of range" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.copy_from_to([1],0, 2).invoke(), "Index out of range")
 
 @pytest.mark.asyncio
 async def test_join_to_smaller_then_from(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.copy_from_to([1,2,3,4,5],3, 2).invoke()
-    assert "From should be strictly smaller then to" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.copy_from_to([1,2,3,4,5],3, 2).invoke(), "From should be strictly smaller then to")
 
 @pytest.mark.asyncio
 async def test_join_to_equal_to_from(contract):
-    with pytest.raises(Exception) as execution_info:
-        await contract.copy_from_to([1,2,3,4,5],3, 3).invoke()
-    assert "From should be strictly smaller then to" in execution_info.value.args[1]["message"]
+    await assert_revert(contract.copy_from_to([1,2,3,4,5],3, 3).invoke(), "From should be strictly smaller then to")
 
 
 
