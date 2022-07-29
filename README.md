@@ -1,4 +1,4 @@
-![Tests](https://github.com/gaetbout/starknet-array-manipulation/actions/workflows/python-app.yml/badge.svg)
+![Tests](https://github.com/gaetbout/starknet-array-manipulation/actions/workflows/python-app.yml/badge.svg)  [![Twitter URL](https://img.shields.io/twitter/url.svg?label=Follow%20%40gaetbout&style=social&url=https%3A%2F%2Ftwitter.com%2Fgaetbout)](https://twitter.com/gaetbout)
 
 Here is a simple lib to do some common array operations.  
 Since cairo is memory immutable (once you write the value in a memory cell, this cell cannot change anymore), each function requiring any memory change, will create a new array. So you can see each function as a copy function with some more extra logic.  
