@@ -195,7 +195,7 @@ end
 
 func sort_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     old_arr_len : felt, old_arr : felt*, sorted_arr_len : felt, sorted_arr : felt*
-) -> (sorted_arr_len : felt, sorted_arr : felt*):
+) -> (arr_len : felt, arr : felt*):
     alloc_locals
     # Array to be sorted is empty
     if old_arr_len == 0:
@@ -253,7 +253,7 @@ func replace_recursive{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     new_arr : felt*,
     old_item : felt,
     new_item : felt,
-) -> (sorted_arr_len : felt, sorted_arr : felt*):
+) -> (arr_len : felt, arr : felt*):
     if old_arr_len == 0:
         return (new_arr_len, new_arr)
     end
