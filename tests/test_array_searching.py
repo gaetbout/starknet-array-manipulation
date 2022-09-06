@@ -19,7 +19,7 @@ async def contract(starknet):
     ([1,2,3,2,4], 5, 0),
 ])
 async def test_contains(contract, input, item, result):
-    execution_info = await contract.contains(input, item).invoke()
+    execution_info = await contract.contains(input, item).execute()
     assert execution_info.result.contains == result
 
 @pytest.mark.asyncio
@@ -30,7 +30,7 @@ async def test_contains(contract, input, item, result):
     ([1,2,3,2,4], 5, MAX_VALUE),
 ])
 async def test_index_of(contract, input, item, result):
-    execution_info = await contract.index_of(input, item).invoke()
+    execution_info = await contract.index_of(input, item).execute()
     assert execution_info.result.index == result
 
 @pytest.mark.asyncio
@@ -41,12 +41,12 @@ async def test_index_of(contract, input, item, result):
     ([4,3,2,1,2,3,2,4], 1),
 ])
 async def test_min(contract, input, result):
-    execution_info = await contract.min(input).invoke()
+    execution_info = await contract.min(input).execute()
     assert execution_info.result.min == result
 
 @pytest.mark.asyncio
 async def test_min_emptyArray(contract):
-    await assert_revert(contract.min([]).invoke(), "Empty array")
+    await assert_revert(contract.min([]).execute(), "Empty array")
 
 
 @pytest.mark.asyncio
@@ -57,12 +57,12 @@ async def test_min_emptyArray(contract):
     ([1,4,3,2,1], 4),
 ])
 async def test_index_of_min(contract,input, result):
-    execution_info = await contract.index_of_min(input).invoke()
+    execution_info = await contract.index_of_min(input).execute()
     assert execution_info.result.index == result
 
 @pytest.mark.asyncio
 async def test_index_of_min_emptyArray(contract):
-    await assert_revert(contract.index_of_min([]).invoke(), "Empty array")
+    await assert_revert(contract.index_of_min([]).execute(), "Empty array")
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("input, result",[
@@ -72,12 +72,12 @@ async def test_index_of_min_emptyArray(contract):
     ([1,2,3,4,3,2,1], 4)
 ])
 async def test_max(contract, input, result):
-    execution_info = await contract.max(input).invoke()
+    execution_info = await contract.max(input).execute()
     assert execution_info.result.max == result
 
 @pytest.mark.asyncio
 async def test_max_emptyArray(contract):
-    await assert_revert(contract.max([]).invoke(), "Empty array")
+    await assert_revert(contract.max([]).execute(), "Empty array")
 
 
 @pytest.mark.asyncio
@@ -88,12 +88,12 @@ async def test_max_emptyArray(contract):
     ([4,1,3,2,4], 4),
 ])
 async def test_index_of_max(contract, input, result):
-    execution_info = await contract.index_of_max(input).invoke()
+    execution_info = await contract.index_of_max(input).execute()
     assert execution_info.result.index == result
 
 @pytest.mark.asyncio
 async def test_index_of_max_emptyArray(contract):
-    await assert_revert(contract.index_of_max([]).invoke(), "Empty array")
+    await assert_revert(contract.index_of_max([]).execute(), "Empty array")
 
 
 @pytest.mark.asyncio
@@ -104,5 +104,5 @@ async def test_index_of_max_emptyArray(contract):
     ([3,3,3,3], 3, 4),
 ])
 async def test_occurrences_of(contract, input, item,result):
-    execution_info = await contract.occurrences_of(input, item).invoke()
+    execution_info = await contract.occurrences_of(input, item).execute()
     assert execution_info.result.occurrences == result

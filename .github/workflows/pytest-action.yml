@@ -17,14 +17,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.7
+    - name: Get the code from repo
+      uses: actions/checkout@v3
+    - name: Set up Python 3.9
       uses: actions/setup-python@v3
       with:
-        python-version: "3.7"
+        python-version: "3.9"
     - name: Install venv
       run: |
-        python3.7 -m venv ~/cairo_venv
+        python3.9 -m venv ~/cairo_venv
         source ~/cairo_venv/bin/activate
     - name: Install packages
       run: |
