@@ -33,7 +33,6 @@ jobs:
         pip3 install ecdsa fastecdsa sympy
         sudo apt install -y libgmp3-dev
         pip3 install cairo-lang
-        pip3 install contextvars
     - name: Test with pytest
       run: |
         pytest
